@@ -1,0 +1,21 @@
+---
+- name: Database Health Check
+  hosts: db_servers
+  tasks:
+    - name: Check if MariaDB is running
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+      register: service_status
+
+    - name: Show MariaDB status
+      ansible.builtin.debug:
+        msg: "MariaDB is {{ service_status.state }}"
+
+    - name: Check Read Only Variable
+      ansible.builtin.command: mysql -e "SHOW VARIABLES LIKE 'read_only';"
+      register: db_vars
+
+    - name: Show Read Only Status
+      ansible.builtin.debug:
+        var: db_vars.stdout_lines

@@ -1,0 +1,23 @@
+---
+- name: Permanently Lock Slaves to Read-Only
+  hosts: db_servers
+  become: yes
+  tasks:
+    - name: Ensure read_only=1 is in 50-server.cnf
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^read_only'
+        line: 'read_only = 1'
+        insertafter: '\[mysqld\]'
+      register: config_file
+
+    - name: Restart MariaDB if config changed
+      ansible.builtin.service:
+        name: mariadb
+        state: restarted
+      when: config_file.changed
+
+    - name: Verify status
+      ansible.builtin.debug:
+        msg: "Config updated and MariaDB restarted on {{ inventory_hostname }}"
+      when: config_file.changed

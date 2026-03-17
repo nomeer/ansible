@@ -1,0 +1,22 @@
+---
+- name: Enforce Read-Only Mode on Slaves
+  hosts: db_servers
+  become: yes
+  tasks:
+    - name: Ensure MariaDB read_only is set to ON
+      community.mysql.mysql_variables:
+        variable: read_only
+        value: "ON"
+        mode: global
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      register: readonly_status
+
+    - name: Report the action taken
+      ansible.builtin.debug:
+        msg: "Node {{ inventory_hostname }} was already set correctly."
+      when: not readonly_status.changed
+
+    - name: Report the fix
+      ansible.builtin.debug:
+        msg: "Node {{ inventory_hostname }} was NOT read-only. Ansible has now enabled it."
+      when: readonly_status.changed
