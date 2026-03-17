@@ -1,5 +1,3 @@
-# ansible
-
 # Ansible Automation for MariaDB HA Cluster
 
 This repository contains the Infrastructure as Code (IaC) playbooks used to automate, secure, and manage a 3-node MariaDB High-Availability (HA) Master-Slave cluster.
