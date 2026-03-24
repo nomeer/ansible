@@ -16,8 +16,8 @@ The cluster is managed via a custom SSH port (`2229`) for security hardening.
 
 ```ini
 [db_servers]
-node2 ansible_host=172.30.72.234
-node3 ansible_host=172.30.72.235
+node2 ansible_host=192.30
+node3 ansible_host=192.30
 
 [db_servers:vars]
 ansible_user=root
